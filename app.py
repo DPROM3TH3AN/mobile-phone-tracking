@@ -8,7 +8,7 @@ import os
 app = Flask(__name__)
 
 # It's better to use environment variables for API keys
-OPENCAGE_KEY = os.getenv('OPENCAGE_KEY', process.env)
+OPENCAGE_KEY = os.getenv('OPENCAGE_KEY')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
