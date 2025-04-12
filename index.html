@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phone Number Tracker</title>
+</head>
+<body>
+    <h1>Phone Number Tracker</h1>
+    
+    <form method="POST">
+        <input type="text" name="phone_number" placeholder="Enter phone number with country code">
+        <button type="submit">Track</button>
+    </form>
+    
+    {% if error %}
+        <p style="color: red;">Error: {{ error }}</p>
+    {% endif %}
+    
+    {% if location %}
+        <h2>Results:</h2>
+        <p>Location: {{ location }}</p>
+        <p>Service Provider: {{ provider }}</p>
+        <p>Coordinates: {{ lat }}, {{ lng }}</p>
+        
+        {% if map_available %}
+            <h3>Location Map:</h3>
+            <iframe src="/static/location.html" width="800" height="600"></iframe>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

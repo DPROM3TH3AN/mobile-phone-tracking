@@ -36,7 +36,7 @@ def index():
                 map_path = os.path.join('static', 'location.html')
                 mymap.save(map_path)
                 
-                return render_template('template/index.html', 
+                return render_template('index.html', 
                                      location=location,
                                      provider=service_pro,
                                      lat=lat,
@@ -44,9 +44,9 @@ def index():
                                      map_available=True)
             
         except Exception as e:
-            return render_template('template/index.html', error=str(e))
+            return render_template('index.html', error=str(e))
     
-    return render_template('template/index.html')
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
