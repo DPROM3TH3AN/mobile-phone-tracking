@@ -1,28 +1,36 @@
+# Add monkey patch at the top
+import collections
+if not hasattr(collections, 'Mapping'):
+    collections.Mapping = collections.abc.Mapping
+
 from flask import Flask, render_template, request
 import phonenumbers
 from phonenumbers import carrier, geocoder
 from opencage.geocoder import OpenCageGeocode
 import folium
 import os
+from dotenv import load_dotenv
 
-app = Flask(__name__)
+load_dotenv()
 
-# It's better to use environment variables for API keys
+app = Flask(__name__, template_folder='templates')
 OPENCAGE_KEY = os.getenv('OPENCAGE_KEY')
+
+if not OPENCAGE_KEY:
+    raise ValueError("OPENCAGE_KEY environment variable is missing!")
+
+if not os.path.exists('static'):
+    os.makedirs('static')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         number = request.form['phone_number']
         try:
-            # Parse phone number
             parsed_num = phonenumbers.parse(number)
-            
-            # Get location and carrier
             location = geocoder.description_for_number(parsed_num, "en")
             service_pro = carrier.name_for_number(parsed_num, "en")
             
-            # Geocode the location
             geocoder_api = OpenCageGeocode(OPENCAGE_KEY)
             results = geocoder_api.geocode(location)
             
@@ -30,7 +38,6 @@ def index():
                 lat = results[0]['geometry']['lat']
                 lng = results[0]['geometry']['lng']
                 
-                # Create map
                 mymap = folium.Map(location=[lat, lng], zoom_start=9)
                 folium.Marker([lat, lng], popup=location).add_to(mymap)
                 map_path = os.path.join('static', 'location.html')
